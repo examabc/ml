@@ -1,0 +1,137 @@
+Slip 26 :
+
+
+Q.1.	Create KNN model on Indian diabetes patient’s database and predict whether a new patient is diabetic (1) or not (0). Find optimal value of K.
+
+
+# Import necessary libraries import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split from sklearn.preprocessing import StandardScaler from sklearn.neighbors import KNeighborsClassifier
+ 
+from sklearn.metrics import classification_report, confusion_matrix import matplotlib.pyplot as plt
+
+# Step 1: Load the dataset (use your local dataset or the following URL for Indian Diabetes dataset)
+
+url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians- diabetes.data.csv'
+
+columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+
+# Load dataset into a pandas dataframe
+
+data = pd.read_csv(url, header=None, names=columns)
+
+
+# Step 2: Preprocess the data
+
+# Handle missing values (replace zeros with NaN where appropriate, then fill them) data.replace(0, np.nan, inplace=True)
+data.fillna(data.mean(), inplace=True)
+
+
+# Step 3: Split the data into features (X) and target (y) X = data.drop('Outcome', axis=1)
+y = data['Outcome']
+
+
+# Step 4: Standardize the features (important for KNN)
+ 
+scaler = StandardScaler() X_scaled = scaler.fit_transform(X)
+
+# Step 5: Split the data into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+
+# Step 6: Train KNN model and evaluate the performance for different values of K
+
+
+# Function to find the optimal K
+
+def optimal_k(X_train, X_test, y_train, y_test): accuracies = []
+for k in range(1, 21): # Test for K values from 1 to 20 knn = KNeighborsClassifier(n_neighbors=k) knn.fit(X_train, y_train)
+accuracy = knn.score(X_test, y_test) accuracies.append(accuracy)
+
+# Plotting K vs accuracy
+
+plt.plot(range(1, 21), accuracies, marker='o') plt.xlabel('Value of K') plt.ylabel('Accuracy')
+ 
+plt.title('Accuracy vs K') plt.show()
+
+# Return the optimal K
+
+optimal_k = accuracies.index(max(accuracies)) + 1 return optimal_k, max(accuracies)
+
+# Find the optimal value of K
+
+optimal_k_value, max_accuracy = optimal_k(X_train, X_test, y_train, y_test) print(f"Optimal value of K: {optimal_k_value} with accuracy: {max_accuracy}")
+
+# Step 7: Train the KNN model with the optimal K and evaluate it knn_optimal = KNeighborsClassifier(n_neighbors=optimal_k_value) knn_optimal.fit(X_train, y_train)
+
+# Evaluate on the test data
+
+y_pred = knn_optimal.predict(X_test) print("Confusion Matrix:") print(confusion_matrix(y_test, y_pred)) print("\nClassification Report:") print(classification_report(y_test, y_pred))
+ 
+
+
+Q.2.	Use Apriori algorithm on groceries dataset to find which items are brought together. Use minimum support =0.25
+
+
+# Import necessary libraries import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+
+# Step 1: Load the dataset
+
+# For this example, you can use an example groceries dataset or replace with your dataset
+
+# You can load the dataset in the following way:
+
+# groceries_df = pd.read_csv("groceries.csv", header=None) # For demonstration, we will use a sample dataset.
+
+# Sample Dataframe (for illustration purposes) data = {'TransactionID': [1, 2, 3, 4, 5, 6],
+'Items': [['Milk', 'Eggs', 'Bread'],
+
+['Milk', 'Diaper', 'Beer', 'Eggs'],
+
+['Bread', 'Milk', 'Diaper', 'Beer'],
+
+['Milk', 'Eggs', 'Bread', 'Diaper'],
+
+['Milk', 'Bread', 'Diaper', 'Beer'],
+
+['Eggs', 'Bread', 'Beer']]}
+ 
+
+
+# Convert to a dataframe groceries_df = pd.DataFrame(data)
+
+# Step 2: Preprocess the data into one-hot encoded format
+
+# Convert the data to a format suitable for Apriori (a list of lists for each transaction) # Create a list of all unique items in the transactions
+all_items = list(set([item for sublist in groceries_df['Items'] for item in sublist]))
+
+
+# Create an empty DataFrame with items as columns
+
+basket = pd.DataFrame(0, index=groceries_df['TransactionID'], columns=all_items)
+
+
+# Fill in the DataFrame
+
+for idx, row in groceries_df.iterrows(): for item in row['Items']:
+basket.at[idx, item] = 1
+
+
+# Step 3: Apply the Apriori algorithm to find frequent itemsets
+
+# Minimum support of 0.25 means that we are looking for itemsets that appear in at least 25% of the transactions
+
+frequent_itemsets = apriori(basket, min_support=0.25, use_colnames=True)
+ 
+# Step 4: Generate the association rules from frequent itemsets # We use lift > 1 to get meaningful association rules
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+
+# Step 5: Display the results print("Frequent Itemsets:") print(frequent_itemsets)
+
+print("\nAssociation Rules:") print(rules)
+

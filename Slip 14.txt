@@ -1,0 +1,109 @@
+Slip 14 :
+
+
+Q.1.	Create a CNN model and train it on mnist handwritten digit dataset. Using model find out the digit written by a hand in a given image. Import mnist dataset from tensorflow.keras.datasets
+
+
+1.	Import necessary libraries.
+2.	Load the MNIST dataset from tensorflow.keras.datasets.
+ 
+3.	Preprocess the data: Normalize the images and reshape them for the CNN model.
+4.	Build the CNN model: Define the architecture of the CNN.
+5.	Compile and train the model.
+6.	Evaluate the model on the test dataset.
+7.	Use the trained model to predict digits in new images.
+
+Below is the Python code to accomplish this task using TensorFlow/Keras:
+
+Step 1: Install Necessary Libraries
+
+If you don't have TensorFlow installed, you can install it using:
+
+bash
+Copy code
+pip install tensorflow
+
+Step 2: Python Program for CNN on MNIST Dataset
+
+python Copy code
+import tensorflow as tf
+from tensorflow.keras import layers, models import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Load the MNIST dataset
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
+
+# Step 2: Preprocess the data
+# Reshaping the data to fit the CNN input format (28x28x1) train_images = train_images.reshape((train_images.shape[0], 28, 28, 1))
+test_images = test_images.reshape((test_images.shape[0], 28, 28, 1))
+
+# Normalize the images to values between 0 and 1
+train_images, test_images = train_images / 255.0, test_images / 255.0
+
+# Step 3: Build the CNN Model model = models.Sequential([
+# First convolutional layer with 32 filters, 3x3 kernel, and ReLU activation
+layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+layers.MaxPooling2D((2, 2)),
+
+# Second convolutional layer with 64 filters, 3x3 kernel, and ReLU activation
+layers.Conv2D(64, (3, 3), activation='relu'),
+layers.MaxPooling2D((2, 2)),
+
+# Flatten the results of the convolutional layers layers.Flatten(),
+ 
+# Fully connected layer with 64 units and ReLU activation layers.Dense(64, activation='relu'),
+
+# Output layer with 10 units (one for each digit) and softmax activation layers.Dense(10, activation='softmax')
+])
+
+# Step 4: Compile the model model.compile(optimizer='adam',
+loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Step 5: Train the model
+model.fit(train_images, train_labels, epochs=5, batch_size=64, validation_split=0.1)
+
+# Step 6: Evaluate the model on the test dataset
+test_loss, test_acc = model.evaluate(test_images, test_labels) print(f"Test accuracy: {test_acc}")
+
+# Step 7: Predict the digit for a given image (e.g., test_images[0]) prediction = model.predict(np.expand_dims(test_images[0], axis=0)) # Expand dims to match input shape
+predicted_digit = np.argmax(prediction) print(f"Predicted digit: {predicted_digit}")
+# Visualize the test image and its predicted label plt.imshow(test_images[0].reshape(28, 28), cmap='gray') plt.title(f"Predicted: {predicted_digit}")
+plt.show()
+
+
+
+
+
+Q.2.	Write a python program to find all null values in a given dataset and remove them. Create your own dataset.
+
+
+import pandas as pd import numpy as np
+
+# Step 1: Create a sample dataset (DataFrame) data = {
+ 
+'Name': ['Alice', 'Bob', 'Charlie', 'David', np.nan], 'Age': [25, 30, np.nan, 22, 23],
+'City': ['New York', 'Los Angeles', 'Chicago', np.nan, 'Houston'], 'Salary': [50000, 60000, 55000, 45000, np.nan]
+}
+
+
+
+# Create a DataFrame
+
+df = pd.DataFrame(data)
+
+
+# Step 2: Display the original dataset print("Original Dataset:")
+print(df)
+
+
+# Step 3: Identify null values print("\nNull Values in the Dataset:") print(df.isnull())
+
+# Step 4: Remove rows with any null values df_cleaned = df.dropna()
+
+# Step 5: Display the cleaned dataset
+
+print("\nDataset after removing rows with null values:")
+ 
+print(df_cleaned)
+
+

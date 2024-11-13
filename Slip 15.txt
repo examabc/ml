@@ -1,0 +1,78 @@
+Slip 15 :
+
+Q.1.	Create an ANN and train it on house price dataset classify the house price is above average or below average
+
+
+import numpy as np import pandas as pd
+from sklearn.model_selection import train_test_split from sklearn.preprocessing import StandardScaler from sklearn.datasets import load_boston
+from tensorflow.keras.models import Sequential from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import to_categorical
+
+
+# Step 1: Load the dataset (Boston Housing dataset) boston = load_boston()
+X = boston.data # Features
+
+y = boston.target # Target variable (house prices)
+ 
+# Step 2: Calculate the average house price average_price = np.mean(y)
+
+# Step 3: Convert house prices to binary classification (Above average = 1, Below average = 0)
+
+y_class = np.where(y > average_price, 1, 0)
+
+
+# Step 4: Split the dataset into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_class, test_size=0.2, random_state=42)
+
+
+# Step 5: Normalize the features using StandardScaler scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train) X_test = scaler.transform(X_test)
+
+# Step 6: Define the ANN model model = Sequential()
+model.add(Dense(64, input_dim=X_train.shape[1], activation='relu')) # First hidden layer
+
+model.add(Dense(32, activation='relu')) # Second hidden layer model.add(Dense(1, activation='sigmoid')) # Output layer (binary classification)
+ 
+# Step 7: Compile the model
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+
+# Step 8: Train the model
+
+model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.2)
+
+
+# Step 9: Evaluate the model
+
+loss, accuracy = model.evaluate(X_test, y_test) print(f"Test Accuracy: {accuracy*100:.2f}%")
+
+# Step 10: Predict the class (above or below average) on test set predictions = model.predict(X_test)
+predictions = (predictions > 0.5).astype(int) # Convert probabilities to binary class (0 or 1)
+
+
+# Print first 10 predictions print("Predictions for the first 10 houses:") print(predictions[:10].flatten())
+
+# Optionally: You can print the actual test labels for comparison print("Actual labels for the first 10 houses:") print(y_test[:10].values)
+ 
+
+
+Q.2.	Write a python program to implement multiple Linear Regression for a house price dataset
+
+
+Mean Squared Error (MSE): 25.02976125717326 R² Score: 0.871312081529204
+
+Predicted house prices for the first 5 test samples:
+[24.46442013 21.67329788 16.53535483 20.29682518 23.5524777 ]
+
+Actual house prices for the first 5 test samples:
+[22.6 20.9 17.8 21.2 23.3]
+
+Model coefficients (weights for each feature):
+[ -0.95709059	0.4773628	2.26327179	0.23446993 -1.79601795
+1.27660734 -0.02861096	-0.34677657 -0.40127329	0.01842446
+0.01219077 -0.82356177
+
+Model intercept (bias term):	0.56805263]
+24.129286490194346

@@ -1,0 +1,100 @@
+Slip 12 :
+
+
+Q.1.	Write a python program to implement k-nearest Neighbors ML algorithm to build prediction model (Use iris Dataset)
+
+Steps:
+
+1.	Load the Iris dataset from sklearn.datasets.
+2.	Preprocess the data: Split the data into training and testing sets.
+3.	Train the k-NN model: Use
+the KNeighborsClassifier from sklearn.neighbors.
+4.	Make predictions and evaluate the model.
+ 
+Python Code:
+
+python
+
+
+# Import necessary libraries import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split from sklearn.neighbors import KNeighborsClassifier from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score, classification_report
+
+# Step 1: Load the Iris dataset iris = load_iris()
+X = iris.data # Features: sepal length, sepal width, petal length, petal width
+y = iris.target # Target: species (setosa, versicolor, virginica)
+
+# Step 2: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Step 3: Initialize and train the k-NN model k = 3 # We will use k=3 for this example
+knn = KNeighborsClassifier(n_neighbors=k) knn.fit(X_train, y_train)
+
+# Step 4: Make predictions on the test data y_pred = knn.predict(X_test)
+
+# Step 5: Evaluate the model
+accuracy = accuracy_score(y_test, y_pred) print(f'Accuracy: {accuracy:.2f}')
+
+# Print detailed classification report print("Classification Report:")
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+
+
+Q.2.	Fit the simple linear regression and polynomial linear regression models to
+Salary_positions.csv data. Find which one is more accurately fitting to the given
+data. Also predict the salaries of level 11 and level 12 employees
+
+
+# Import necessary libraries import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+ 
+from sklearn.preprocessing import PolynomialFeatures from sklearn.metrics import mean_squared_error, r2_score from sklearn.model_selection import train_test_split
+
+# Step 1: Load the dataset
+# Load the data (assumed to have columns 'Position Level' and 'Salary') data = pd.read_csv('Salary_positions.csv')
+X = data['Position Level'].values.reshape(-1, 1) # Features: Position Level y = data['Salary'].values # Target: Salary
+
+# Step 2: Fit Simple Linear Regression model simple_lr = LinearRegression() simple_lr.fit(X, y)
+
+# Step 3: Fit Polynomial Linear Regression model (degree 4 for example) poly = PolynomialFeatures(degree=4)
+X_poly = poly.fit_transform(X) poly_lr = LinearRegression() poly_lr.fit(X_poly, y)
+
+# Step 4: Make Predictions
+# Predict salaries using Simple Linear Regression y_pred_simple = simple_lr.predict(X)
+
+# Predict salaries using Polynomial Linear Regression y_pred_poly = poly_lr.predict(X_poly)
+
+# Step 5: Evaluate the models
+# Compute Mean Squared Error and R-squared for both models mse_simple = mean_squared_error(y, y_pred_simple)
+mse_poly = mean_squared_error(y, y_pred_poly)
+
+r2_simple = r2_score(y, y_pred_simple) r2_poly = r2_score(y, y_pred_poly)
+
+print(f"Simple Linear Regression MSE: {mse_simple:.2f}") print(f"Polynomial Linear Regression MSE: {mse_poly:.2f}") print(f"Simple Linear Regression R²: {r2_simple:.2f}") print(f"Polynomial Linear Regression R²: {r2_poly:.2f}")
+
+# Step 6: Predict salaries for level 11 and level 12 employees salary_11_simple = simple_lr.predict([[11]]) # Simple LR Prediction for Level 11
+salary_12_simple = simple_lr.predict([[12]]) # Simple LR Prediction for Level 12
+
+salary_11_poly = poly_lr.predict(poly.transform([[11]])) # Polynomial LR Prediction for Level 11
+salary_12_poly = poly_lr.predict(poly.transform([[12]])) # Polynomial LR Prediction for Level 12
+
+print(f"Predicted salary for level 11 (Simple LR):
+${salary_11_simple[0]:,.2f}")
+print(f"Predicted salary for level 12 (Simple LR):
+${salary_12_simple[0]:,.2f}")
+ 
+print(f"Predicted salary for level 11 (Polynomial LR):
+${salary_11_poly[0]:,.2f}")
+print(f"Predicted salary for level 12 (Polynomial LR):
+${salary_12_poly[0]:,.2f}")
+
+# Step 7: Visualize the results
+plt.scatter(X, y, color='red') # Actual data points
+plt.plot(X, y_pred_simple, label='Linear Regression', color='blue') plt.plot(X, y_pred_poly, label='Polynomial Regression (degree 4)', color='green')
+plt.xlabel('Position Level') plt.ylabel('Salary') plt.title('Salary vs Position Level') plt.legend()
+plt.show()
+
+

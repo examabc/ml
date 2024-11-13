@@ -1,0 +1,70 @@
+Slip 10 :
+
+
+Q.1.	Write a python program to transform data with Principal Component Analysis (PCA). Use iris dataset.
+ 
+
+
+# Import necessary libraries import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+from sklearn.decomposition import PCA
+
+from sklearn.preprocessing import StandardScaler from sklearn.datasets import load_iris
+
+# Step 1: Load the Iris dataset iris = load_iris()
+X = iris.data # Features (sepal length, sepal width, petal length, petal width) y = iris.target # Target labels (Iris species)
+
+# Step 2: Standardize the data (important for PCA) scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+
+# Step 3: Apply PCA
+
+# We'll reduce the data to 2 components for visualization pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+ 
+
+
+# Step 4: Visualize the PCA result # Plot the transformed data plt.figure(figsize=(8, 6))
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='viridis', edgecolor='k', s=50) plt.title('PCA of Iris Dataset')
+plt.xlabel('Principal Component 1')
+
+plt.ylabel('Principal Component 2') plt.colorbar(label='Target Class') plt.show()
+
+# Optionally, you can print the explained variance ratio of each component print(f'Explained variance ratio for each principal component:
+{pca.explained_variance_ratio_}')
+
+
+
+Q.2.	Write a Python program to prepare Scatter Plot for Iris Dataset. Convert Categorical values in to numeric.
+
+
+# Import necessary libraries import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Step 1: Load the Iris dataset iris = load_iris()
+X = iris.data # Features (sepal length, sepal width, petal length, petal width) y = iris.target # Target labels (Iris species)
+ 
+
+# Step 2: Convert categorical values (target labels) to numeric
+# The target labels (y) are already numeric (0: setosa, 1: versicolor, 2: virginica), # but let's create a DataFrame with the numeric mapping for clarity.
+
+species_mapping = {0: 'setosa', 1: 'versicolor', 2: 'virginica'} y_numeric = [species_mapping[i] for i in y]
+
+# Step 3: Create a DataFrame for easier manipulation iris_df = pd.DataFrame(X, columns=iris.feature_names)
+iris_df['species'] = y_numeric # Add species column to the DataFrame
+
+# Step 4: Create a scatter plot
+# Let's plot Sepal Length vs Sepal Width (as an example) plt.figure(figsize=(8, 6))
+for species in iris_df['species'].unique():
+subset = iris_df[iris_df['species'] == species]
+plt.scatter(subset['sepal length (cm)'], subset['sepal width (cm)'], label=species)
+
+plt.title('Sepal Length vs Sepal Width for Iris Dataset') plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Sepal Width (cm)') plt.legend(title='Species') plt.grid(True)
+plt.show()
+

@@ -1,0 +1,116 @@
+Slip 18 :
+
+
+Q.1.	Write a python program to implement k-means algorithm on a Diabetes dataset. # Import necessary libraries
+ 
+import pandas as pd import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.cluster import KMeans
+
+from sklearn.preprocessing import StandardScaler from sklearn.datasets import load_diabetes
+
+# Step 1: Load the Diabetes dataset
+
+# For this example, we're using the dataset available from sklearn datasets diabetes_data = load_diabetes()
+X = diabetes_data.data # Features (independent variables) y = diabetes_data.target # Target (dependent variable)
+
+# Step 2: Preprocess the Data
+
+# We will scale the features for better clustering performance using StandardScaler scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+
+# Step 3: Apply K-Means Clustering
+
+# We will try clustering into 3 clusters (this can be adjusted based on the dataset) kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(X_scaled)
+ 
+
+
+# Step 4: Evaluate the Clusters
+
+# Get the cluster labels and centers labels = kmeans.labels_
+centers = kmeans.cluster_centers_
+
+
+# Step 5: Visualize the Clusters
+
+# We'll reduce the dimensions to 2D for easy visualization using PCA (Principal Component Analysis)
+
+from sklearn.decomposition import PCA pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+
+# Create a scatter plot of the clustered data plt.figure(figsize=(8, 6))
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=labels, cmap='viridis', s=50) plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75, marker='x') plt.title('K-Means Clustering of Diabetes Dataset')
+plt.xlabel('PCA Component 1')
+
+plt.ylabel('PCA Component 2') plt.show()
+ 
+# Display the cluster centers (means of the features) print("Cluster Centers:\n", centers)
+
+
+
+
+
+Q.2.	Write a python program to implement Polynomial Linear Regression for salary_positions dataset.
+
+
+# Import necessary libraries import numpy as np
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+from sklearn.linear_model import LinearRegression from sklearn.preprocessing import PolynomialFeatures from sklearn.model_selection import train_test_split from sklearn.metrics import mean_squared_error
+
+# Step 1: Load the Salary Positions Dataset (Example dataset) # Here, we're creating a sample dataset for illustration
+data = {
+
+'Position Level': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+
+'Salary': [45000, 50000, 60000, 75000, 90000, 110000, 130000, 150000, 180000,
+200000, 220000, 250000]
+ 
+}
+
+
+df = pd.DataFrame(data)
+
+
+# Step 2: Preprocess the Data
+
+X = df['Position Level'].values.reshape(-1, 1) # Independent variable y = df['Salary'].values # Dependent variable
+
+# Step 3: Create Polynomial Features
+
+poly = PolynomialFeatures(degree=4) # Creating 4th degree polynomial features X_poly = poly.fit_transform(X)
+
+# Step 4: Fit the Polynomial Regression Model lin_reg = LinearRegression() lin_reg.fit(X_poly, y)
+
+# Step 5: Visualize the Polynomial Regression Curve # Plotting original data points
+plt.scatter(X, y, color='blue')
+
+
+# Plotting the polynomial regression line
+
+X_grid = np.arange(min(X), max(X), 0.1) # Creating a smooth curve
+ 
+X_grid = X_grid.reshape((len(X_grid), 1))
+
+plt.plot(X_grid, lin_reg.predict(poly.transform(X_grid)), color='red')
+
+
+plt.title('Polynomial Linear Regression (Salary vs Position Level)') plt.xlabel('Position Level')
+plt.ylabel('Salary') plt.show()
+
+# Step 6: Predict salaries for Level 11 and Level 12 level_11 = np.array([[11]])
+level_12 = np.array([[12]])
+
+
+salary_11 = lin_reg.predict(poly.transform(level_11)) salary_12 = lin_reg.predict(poly.transform(level_12))
+
+print(f"Predicted Salary for Level 11: {salary_11[0]}") print(f"Predicted Salary for Level 12: {salary_12[0]}")
+
+# Step 7: Calculate Mean Squared Error (MSE) for evaluation y_pred = lin_reg.predict(X_poly)
+mse = mean_squared_error(y, y_pred) print(f"Mean Squared Error: {mse}")

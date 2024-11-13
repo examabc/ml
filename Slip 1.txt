@@ -1,0 +1,147 @@
+Slip 1 :
+
+Q.1	Use Apriori algorithm on groceries dataset to find which items are brought together. Use minimum support =0.25
+
+
+Steps to Follow
+
+1.	Install Required Libraries:
+
+bash
+Copy code
+pip install mlxtend pandas
+
+2.	Prepare the Dataset: The grocery dataset should be in a transaction format, where each row represents a transaction, and each column represents an item. A value of 1 indicates that the item was purchased in that transaction,
+and 0 indicates it was not.
+
+Example of a grocery dataset (transactional format):
+
+plaintext Copy code
+Bread Milk Butter Eggs Cheese
+1	1	0	1	0
+1	0	1	1	1
+0	1	0	1	1
+
+3.	Python Code:
+ 
+Here’s the code to apply the Apriori algorithm on the dataset with a minimum support of 0.25:
+
+python Copy code
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Load the dataset
+# Ensure your dataset file (groceries.csv) is in the correct format (1 for present, 0 for absent in each transaction)
+# For example:
+# transactions = pd.read_csv("groceries.csv")
+
+# Creating a sample dataset for demonstration data = {'Bread': [1, 1, 0, 1, 0],
+'Milk': [1, 0, 1, 1, 1],
+'Butter': [0, 1, 0, 1, 0],
+'Eggs': [1, 1, 1, 0, 0],
+'Cheese': [0, 1, 1, 1, 0]}
+transactions = pd.DataFrame(data)
+
+# Apply the Apriori algorithm with a minimum support of 0.25 frequent_itemsets = apriori(transactions, min_support=0.25, use_colnames=True)
+
+# Display frequent itemsets
+print("Frequent itemsets with minimum support of 0.25:") print(frequent_itemsets)
+
+# Generate association rules
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+# Display association rules print("\nAssociation rules based on lift:") print(rules)
+
+Explanation of Code:
+
+1.	Data Loading: This code assumes you have a groceries dataset in the correct format. If using a CSV file, load it using pd.read_csv("groceries.csv").
+2.	Apriori Algorithm:
+o	The apriori() function from mlxtend generates frequent itemsets that meet the specified minimum support of 0.25.
+o	use_colnames=True allows us to see item names in the resulting frequent itemsets instead of column indices.
+3.	Association Rules:
+o	The association_rules() function generates rules from the frequent itemsets.
+ 
+o	metric="lift" and min_threshold=1 are set to get meaningful association rules where items are likely bought together.
+
+Sample Output:
+
+The output should display the frequent itemsets with a support of at least 0.25 and association rules that show which items are often bought together, including metrics like confidence and lift.
+
+Example Output:
+
+plaintext Copy code
+Frequent itemsets with minimum support of 0.25:
+	support	itemsets
+0	0.60	[Milk]
+1	0.60	[Eggs]
+2	0.40	[Milk, Eggs]
+3	0.40	[Cheese, Milk]
+
+Association rules based on lift:
+antecedents consequents confidence	lift
+0	[Milk]	[Eggs]	0.6667	1.200
+1	[Eggs]	[Milk]	0.6667	1.200
+
+
+
+
+
+2.	Write a Python program to prepare Scatter Plot for Iris Dataset. Convert Categorical
+values in numeric format for a dataset
+
+
+
+
+Steps to Follow
+
+1.	Load the Iris Dataset: Use sklearn.datasets or load it directly from seaborn.
+2.	Convert Categorical Data: Map categorical species names to numeric values.
+3.	Create Scatter Plot: Use matplotlib or seaborn for plotting.
+Here’s the Python code for these steps: python
+Copy code
+import pandas as pd import seaborn as sns
+import matplotlib.pyplot as plt
+ 
+from sklearn.datasets import load_iris
+
+# Load the Iris dataset iris = load_iris()
+iris_df = pd.DataFrame(data=iris.data, columns=iris.feature_names) iris_df['species'] = iris.target
+
+# Map species target to categorical names (Optional: for better readability) species_map = {0: 'setosa', 1: 'versicolor', 2: 'virginica'} iris_df['species'] = iris_df['species'].map(species_map)
+
+# Convert categorical species names to numeric values iris_df['species_numeric'] = iris_df['species'].astype('category').cat.codes
+
+# Display the first few rows of the DataFrame to verify print("Data with numeric species values:") print(iris_df.head())
+
+# Create scatter plots for sepal length vs sepal width, and petal length vs petal width
+plt.figure(figsize=(14, 6))
+
+# Subplot 1: Sepal Length vs Sepal Width plt.subplot(1, 2, 1)
+sns.scatterplot(data=iris_df, x='sepal length (cm)', y='sepal width (cm)', hue='species_numeric', palette='viridis')
+plt.title("Sepal Length vs Sepal Width") plt.xlabel("Sepal Length (cm)") plt.ylabel("Sepal Width (cm)")
+
+# Subplot 2: Petal Length vs Petal Width plt.subplot(1, 2, 2)
+sns.scatterplot(data=iris_df, x='petal length (cm)', y='petal width (cm)', hue='species_numeric', palette='viridis')
+plt.title("Petal Length vs Petal Width") plt.xlabel("Petal Length (cm)") plt.ylabel("Petal Width (cm)")
+
+# Display the plot plt.tight_layout() plt.show()
+
+Explanation of Code:
+
+1.	Loading the Dataset: We use load_iris() from sklearn.datasets to load the Iris dataset, then convert it into a pandas DataFrame for ease of use.
+2.	Mapping Species to Numeric:
+o	The species column contains categorical values mapped using a dictionary (species_map) for readability.
+o	We then create a species_numeric column that converts species names into numeric codes using astype('category').cat.codes.
+3.	Creating Scatter Plots:
+o	The first plot (subplot(1, 2, 1)) shows Sepal Length vs. Sepal Width with points colored based on species.
+ 
+o	The second plot (subplot(1, 2, 2)) shows Petal Length vs. Petal Width.
+o	We use sns.scatterplot to create scatter plots with a color hue for the species.
+
+Expected Output:
+
+Two scatter plots will appear, showing the distribution of species in the Iris dataset:
+
+•	Sepal Length vs Sepal Width.
+•	Petal Length vs Petal Width.
+

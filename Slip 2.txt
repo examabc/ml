@@ -1,0 +1,100 @@
+Slip 2 :
+
+Q.1.	Write a python program to implement simple Linear Regression for predicting house price. First find all null values in a given dataset and remove them
+
+
+import pandas as pd import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.linear_model import LinearRegression from sklearn.model_selection import train_test_split from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+
+# Replace 'house_prices.csv' with your actual dataset file data = pd.read_csv('house_prices.csv')
+ 
+
+
+# Display the first few rows of the dataset print("First few rows of the dataset:") print(data.head())
+
+# Step 1: Find and remove null values print("\nChecking for null values:")
+print(data.isnull().sum()) # Check for null values in each column
+
+
+# Drop rows with any null values data = data.dropna()
+print("\nData after removing null values:") print(data.isnull().sum())
+
+# Step 2: Select feature and target variable
+
+# Assuming the dataset has a 'SquareFootage' column as the feature and 'Price' as the target variable
+
+X = data[['SquareFootage']] # Input feature (independent variable) y = data['Price']	# Target variable (dependent variable)
+
+# Step 3: Split the dataset into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+ 
+
+
+# Step 4: Create and train the Linear Regression model model = LinearRegression()
+model.fit(X_train, y_train)
+
+
+# Step 5: Make predictions on the test set y_pred = model.predict(X_test)
+
+# Step 6: Evaluate the model
+
+mse = mean_squared_error(y_test, y_pred) print(f"\nMean Squared Error: {mse}")
+
+# Display the slope (coefficient) and intercept of the regression line print(f"Slope (Coefficient): {model.coef_[0]}")
+print(f"Intercept: {model.intercept_}")
+
+
+# Step 7: Plot the data and the regression line plt.figure(figsize=(10, 6))
+plt.scatter(X, y, color='blue', label='Data Points')
+
+plt.plot(X, model.predict(X), color='red', linewidth=2, label='Regression Line') plt.xlabel('Square Footage')
+plt.ylabel('Price')
+ 
+plt.title('House Price Prediction using Linear Regression') plt.legend()
+plt.show()
+
+
+Q.2.	The data set refers to clients of a wholesale distributor. It includes the annual spending in monetary units on diverse product categories. Using data Wholesale customer dataset compute agglomerative clustering to find out annual spending clients in the same region
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler from sklearn.cluster import AgglomerativeClustering import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+# Load the Wholesale Customers dataset
+# Replace 'wholesale_customers.csv' with the path to your dataset data = pd.read_csv('wholesale_customers.csv')
+
+# Display the first few rows of the dataset print("First few rows of the dataset:") print(data.head())
+
+# Step 1: Data Preprocessing
+# Check for null values and handle them if present print("\nChecking for null values:") print(data.isnull().sum())
+
+# Standardize the data scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data.iloc[:, 2:]) # Assuming Region and Channel are columns to exclude
+
+# Step 2: Apply Agglomerative Clustering
+# We start with a linkage matrix for hierarchical clustering (for dendrogram visualization)
+ 
+linked = linkage(data_scaled, method='ward')
+
+# Plot dendrogram for visualizing hierarchical clustering plt.figure(figsize=(10, 7))
+dendrogram(linked, orientation='top', distance_sort='ascending', show_leaf_counts=False)
+plt.title('Dendrogram for Agglomerative Clustering') plt.xlabel('Clients')
+plt.ylabel('Euclidean distances') plt.show()
+
+# Step 3: Perform Agglomerative Clustering with an appropriate number of clusters # You can set n_clusters to the desired number of clusters based on the dendrogram n_clusters = 3 # Choose the optimal number from the dendrogram
+agg_clustering = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
+data['Cluster'] = agg_clustering.fit_predict(data_scaled)
+
+# Step 4: Visualize the clusters (Optional) plt.figure(figsize=(10, 6))
+sns.scatterplot(data=data, x='Grocery', y='Fresh', hue='Cluster', palette='viridis') plt.title('Agglomerative Clustering of Wholesale Customers')
+plt.xlabel('Annual Spending on Grocery') plt.ylabel('Annual Spending on Fresh') plt.show()
+
+# Step 5: Examine cluster characteristics print("\nCluster means for each feature:") print(data.groupby('Cluster').mean())
+

@@ -1,0 +1,94 @@
+Slip 22 :
+
+
+Q.1.	Write a python program to implement simple Linear Regression for predicting house price.
+
+
+import pandas as pd import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+
+# Step 1: Load the dataset
+
+# For this example, let's assume we have a dataset 'house_prices.csv'
+
+# The dataset contains two columns: 'Size' (in square feet) and 'Price' (in dollars) df = pd.read_csv('house_prices.csv')
+
+# Step 2: Preprocess the data # Check for missing values
+ 
+print(df.isnull().sum())
+
+
+# Drop any rows with missing values (if needed) df = df.dropna()
+
+# Features and target variable
+
+X = df[['Size']] # Feature (e.g., Size of the house in square feet) y = df['Price']	# Target variable (Price of the house)
+
+# Step 3: Split the data into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Step 4: Create and train the linear regression model model = LinearRegression()
+model.fit(X_train, y_train)
+
+
+# Step 5: Make predictions on the test data y_pred = model.predict(X_test)
+
+# Step 6: Evaluate the model
+
+# Calculate Mean Squared Error (MSE)
+ 
+mse = mean_squared_error(y_test, y_pred)
+
+
+# Calculate R-squared value r2 = r2_score(y_test, y_pred)
+
+# Displaying the evaluation metrics print(f"Mean Squared Error: {mse}") print(f"R-squared: {r2}")
+
+# Step 7: Visualize the results
+
+plt.scatter(X_test, y_test, color='blue', label='Actual Prices') plt.plot(X_test, y_pred, color='red', label='Regression Line') plt.xlabel('Size of House (in sq ft)')
+plt.ylabel('Price of House (in dollars)')
+
+plt.title('Simple Linear Regression for House Price Prediction') plt.legend()
+plt.show()
+
+
+# Example: Predict the price of a house with 1500 sq ft size predicted_price = model.predict([[1500]])
+print(f"The predicted price for a 1500 sq ft house is ${predicted_price[0]:,.2f}")
+ 
+
+Q.2.	Use Apriori algorithm on groceries dataset to find which items are brought together. Use minimum support =0.25
+
+
+Frequent Itemsets:
+support	itemsets
+0	0.571429	(Bread)
+1	0.571429	(Butter)
+2	0.571429	(Milk)
+3	0.428571	(Jam)
+4	0.428571	(Milk, Bread)
+5	0.285714	(Bread, Butter)
+6	0.285714	(Milk, Butter)
+7	0.285714	(Milk, Jam)
+8	0.285714	(Butter, Jam)
+9	0.285714 (Bread, Butter, Jam) 10 0.285714 (Milk, Butter, Jam)
+
+Association Rules:
+antecedents	consequents ... lift leverage conviction
+0	(Bread)	(Butter)	...	1.0	0.00	1.0
+1	(Butter)	(Bread)	...	1.0	0.00	1.0
+2	(Milk)	(Bread)	...	1.2	0.10	1.5
+3	(Milk)	(Butter)	...	1.2	0.10	1.5
+4	(Jam)	(Butter)	...	1.0	0.00	1.0
+...				
+
+Filtered Association Rules:
+antecedents	consequents ... lift leverage conviction
+0	(Bread)	(Butter)	...	1.0	0.00	1.0
+1	(Butter)	(Bread)	...	1.0	0.00	1.0
